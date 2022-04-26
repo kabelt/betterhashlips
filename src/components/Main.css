@@ -1,6 +1,6 @@
 .main {
   grid-area: main;
-  background-color: var(--grey);
+  background-color: black;
   display: flex;
   flex-direction: column;
 }

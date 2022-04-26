@@ -13,7 +13,6 @@ const Canvas = (props) => {
 
   const updateCanvas = async (_ctx, _paths) => {
     _paths.forEach(async (path) => {
-      // console.log(path)
       let img = await loadImage(path);
       _ctx.drawImage(img, 0, 0, 300, 300);
     });

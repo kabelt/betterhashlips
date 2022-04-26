@@ -1,5 +1,4 @@
 import { FiX } from "react-icons/fi";
-import mask from "../assets/mask.png";
 import { SortableItem, swapArrayPositions } from "react-sort-list";
 import "./Aside.css";
 import { useState } from "react";
@@ -341,16 +340,6 @@ function Aside(props) {
       <div className="aside_close-icon">
         <FiX onClick={() => props.toggleSideBar()} />
       </div>
-      <div className="aside_list_title">
-        <a
-          className="aside_img_link"
-          target="_blank"
-          href="https://hashlips.online/HashLips"
-        >
-          <img src={mask} width="25" height="25" />
-        </a>
-        <p>Art Engine</p>
-      </div>
       <ul className="aside_list">
         <details className="aside_list_item">
           <summary>Configuration</summary>
@@ -415,15 +404,6 @@ function Aside(props) {
           >
             Generate
           </button>
-          {/* {input("IPFS", "baseUri", props.config.baseUri)}
-          <button
-            className="aside_list_item_button"
-            onClick={async () => {
-              updateMetadata();
-            }}
-          >
-            Update Metadata
-          </button> */}
         </details>
       </ul>
     </aside>

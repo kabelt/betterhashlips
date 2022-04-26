@@ -2,14 +2,16 @@
   grid-area: aside;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height:100vh;
   width: 240px;
   position: fixed;
   overflow-y: auto;
   z-index: 2;
   transform: translateX(-245px);
-  color: var(--grey);
-  background-color: var(--offWhite);
+  color: white;
+  background-color: black;
+  border-color: white;
+  margin-top: 2vh;
 }
 
 .aside.active {
@@ -17,13 +19,14 @@
 }
 
 .aside_list_title {
-  height: 50px;
+  height: 65px;
   padding: 0px 15px;
   display: flex;
   align-items: center;
   font-weight: 700;
-  background-color: var(--grey);
+  background-color: black;
   color: var(--white);
+  border-color: white;
 }
 
 .aside_img_link {
@@ -33,6 +36,7 @@
 .aside_list {
   padding: 0;
   list-style-type: none;
+  background-color: black;
 }
 
 .aside_list_item {
