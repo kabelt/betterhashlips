@@ -1,1 +1,0 @@
-node_modules/electron/dist/Electron.app/Contents/MacOS/Electron /Users/kanet.m/Desktop/engine/
