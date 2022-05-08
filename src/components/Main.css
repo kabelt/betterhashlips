@@ -42,7 +42,7 @@
   flex-direction: column;
   font-size: 12px;
   background-color: black;
-  border: 1px solid grey;
+  border: 1.5px solid rgb(50, 50, 50);
   border-radius: 8px;
 }
 
@@ -59,7 +59,7 @@
 .card {
   padding: 15px;
   /* border: 1px solid var(--white); */
-  border: 0.1px solid gray;
+  border: 1.5px solid rgb(50, 50, 50);
   border-radius: 8px;
 }
 
