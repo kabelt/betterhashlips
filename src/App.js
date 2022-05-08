@@ -12,15 +12,15 @@ const path = window.require("path");
 function App() {
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [config, setConfig] = useState({
-    supply: 5,
-    name: "HashLips NFT",
-    symbol: "HNFT",
-    description: "This is a collection about...",
+    supply: 10,
+    // name: "HashLips NFT",
+    // symbol: "HNFT",
+    // description: "This is a collection about...",
     width: 1024,
     height: 1024,
-    baseUri: "ipfs://ReplaceCID",
-    inputPath: app.getAppPath(),
-    outputPath: app.getAppPath(),
+    // baseUri: "ipfs://ReplaceCID",
+    inputPath: app.getAppPath().split("/").slice(0,-1).join("/"),
+    outputPath: app.getAppPath().split("/").slice(0,-1).join("/"),
   });
   const [folderNames, setFolderNames] = useState([]);
   const [progress, setProgress] = useState(0);
@@ -74,6 +74,7 @@ function App() {
           filename: i,
           path: `${_path}/${i}`,
           weight: getRarityWeight(i),
+          enabled: true,
         };
       });
   };
@@ -94,8 +95,12 @@ function App() {
             id: index + 1,
             elements: getElements(path.join(config.inputPath, file)),
             name: file,
+            enabled: true,
           };
         });
+        for (var i = 0; i < newFiles.length; i++) {
+          newFiles[i].enabledElementsCount = newFiles[i].elements.length
+        }
       setFolderNames(newFiles);
     });
   };
@@ -124,6 +129,7 @@ function App() {
       <Main
         config={config}
         folderNames={folderNames}
+        setFolderNames={setFolderNames}
         progress={progress}
         status={status}
       />

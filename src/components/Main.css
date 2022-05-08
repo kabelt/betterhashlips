@@ -17,6 +17,7 @@
   white-space: nowrap;
   overflow: hidden;
   border: 1px solid var(--white);
+  /* border: 1px solid gray; */
   text-overflow: ellipsis;
   margin-bottom: 0;
 }
@@ -41,6 +42,8 @@
   flex-direction: column;
   font-size: 12px;
   background-color: black;
+  border: 1px solid grey;
+  border-radius: 8px;
 }
 
 .log_info_title {
@@ -55,7 +58,9 @@
 
 .card {
   padding: 15px;
-  border: 1px solid var(--white);
+  /* border: 1px solid var(--white); */
+  border: 0.1px solid gray;
+  border-radius: 8px;
 }
 
 .card:first-child {
@@ -83,6 +88,83 @@
 .card_tree_sub_item_title {
   font-size: 10px;
   margin-top: 5px;
+}
+
+/* newly added for additional on/off varient functionality */
+.card_tree_sub_item_title_btn {
+  margin-left: 8px;
+  margin-top: 2px;
+  width: 200px;
+  padding: 5px;
+  font-size: 10px;
+  cursor: pointer;
+  color: var(--white);
+  background-color: transparent;
+  text-align: left;
+  border: none;
+  display: block;
+  /* outline: none; */
+  /* border: grey; */
+  /* border:beige; */
+  width: fit-content;
+}
+
+/* .card_tree_sub_item_title_btn:active {
+  border-style: outset;
+  border: none;
+} */
+
+.card_tree_sub_item_title_btn_disabled {
+  margin-left: 8px;
+  margin-top: 2px;
+  width: 200px;
+  padding: 5px;
+  font-size: 10px;
+  cursor: pointer;
+  color: rgb(72, 72, 72);
+  background-color: transparent;
+  text-align: left;
+  outline: none;
+  border: none;
+  width: fit-content;
+  display: block;
+}
+
+/* .card_tree_sub_item_title_btn_disabled:active {
+  border-style: outset;
+  border: none;
+} */
+
+.card_tree_layer {
+  font-size: 12px;
+  margin-top: 10px;
+  font-weight: 700;
+  width: fit-content;
+  cursor: pointer;
+  /* color: pink; */
+}
+
+.card_tree_layer_disabled {
+  font-size: 12px;
+  margin-top: 10px;
+  font-weight: 700;
+  width: fit-content;
+  cursor: pointer;
+  color: grey;
+}
+
+.layer_switch_btn {
+  background-color: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.layer_switch_btn_disabled {
+  background-color: transparent;
+  color: grey;
+  border: none;
+  cursor: pointer;
 }
 
 /* responsive layout */

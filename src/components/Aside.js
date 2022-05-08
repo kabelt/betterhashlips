@@ -22,7 +22,7 @@ function Aside(props) {
       });
     }
     fs.mkdirSync(path.join(props.config.outputPath, "build"));
-    fs.mkdirSync(path.join(props.config.outputPath, "build", "json"));
+    // fs.mkdirSync(path.join(props.config.outputPath, "build", "json"));
     fs.mkdirSync(path.join(props.config.outputPath, "build", "images"));
   };
 
@@ -86,37 +86,74 @@ function Aside(props) {
     return !_DnaList.has(_filteredDNA);
   };
 
+  const findBodyIndex = (_layers) => {
+    let bodyIndex = 0;
+    _layers.forEach((layer, index) => {
+      if (layer.name.split("-")[1] == "Body") {
+        bodyIndex = index;
+      }
+    })
+    return bodyIndex;
+  }
+
   const createDna = (_layers) => {
+    console.log('_layers', _layers)
     let randNum = [];
-    // let selected = {};
     _layers.forEach((layer) => {
-      // get compatible right arm
-      if (layer.id == 5) {
+      // get the compatible right arm
+      if (layer.name.split("-")[1] == "Arm") {
+        let bodyIndex = findBodyIndex(_layers);
+        console.log('bodyIndex', bodyIndex)
+        console.log(`${randNum[findBodyIndex(_layers)]}`, "is added")
         return randNum.push(
-          `${randNum[1]}`
+          `${randNum[findBodyIndex(_layers)]}`
         );
       }
-      var totalWeight = 0;
-      layer.elements.forEach((element) => {
-        totalWeight += element.weight;
-      });
-      // number between 0 - totalWeight
-      let random = Math.floor(Math.random() * totalWeight);
-      for (var i = 0; i < layer.elements.length; i++) {
-        // subtract the current weight from the random weight until we reach a sub zero value.
-        random -= layer.elements[i].weight;
-        if (random < 0) {
+      let random = Math.floor(Math.random() * layer.elements.length);
           return randNum.push(
-            `${layer.elements[i].id}:${layer.elements[i].name}`
-            // `${layer.elements[i].id}:${layer.elements[i].filename}`
+            `${layer.elements[random].id}:${layer.elements[random].name}`
           );
-        }
-      }
     });
     return randNum.join("-");
   };
 
+  // previous version before implementing "toggleVarient" feature
+  // const createDna = (_layers) => {
+  //   let randNum = [];
+  //   // let selected = {};
+  //   _layers.forEach((layer) => {
+  //     // get the compatible right arm
+  //     console.log('layer', layer)
+  //     if (layer.name.split("-")[1] == "Arm") {
+  //     // if (layer.id == 5) {
+  //       return randNum.push(
+  //         `${randNum[1]}`
+  //       );
+  //     }
+  //     var totalWeight = 0;
+  //     layer.elements.forEach((element) => {
+  //       totalWeight += element.weight;
+  //     });
+  //     // number between 0 - totalWeight
+  //     let random = Math.floor(Math.random() * totalWeight);
+  //     for (var i = 0; i < layer.elements.length; i++) {
+  //       // subtract the current weight from the random weight until we reach a sub zero value.
+  //       random -= layer.elements[i].weight;
+  //       if (random < 0) {
+  //         return randNum.push(
+  //           `${layer.elements[i].id}:${layer.elements[i].name}`
+  //           // `${layer.elements[i].id}:${layer.elements[i].filename}`
+  //         );
+  //       }
+  //     }
+  //   });
+  //   return randNum.join("-");
+  // };
+
   const removeQueryStrings = (_dna) => {
+    // if (!_dna) {
+    //   return
+    // }
     const query = /(\?.*$)/;
     return _dna.replace(query, "");
   };
@@ -186,48 +223,89 @@ function Aside(props) {
     );
   };
 
-  const addMetadata = (_dna, _edition) => {
-    let dateTime = Date.now();
-    let tempMetadata = {
-      name: `${props.config.name} #${_edition}`,
-      description: props.config.description,
-      image: `REPLACE/${_edition}.png`,
-      edition: _edition,
-      date: dateTime,
-      attributes: attributesList,
-      compiler: "HashLips Art Engine",
-    };
-    metadataList.push(tempMetadata);
-    attributesList = [];
-  };
+  // const addMetadata = (_dna, _edition) => {
+  //   let dateTime = Date.now();
+  //   let tempMetadata = {
+  //     name: `${props.config.name} #${_edition}`,
+  //     description: props.config.description,
+  //     image: `REPLACE/${_edition}.png`,
+  //     edition: _edition,
+  //     date: dateTime,
+  //     attributes: attributesList,
+  //     compiler: "HashLips Art Engine",
+  //   };
+  //   metadataList.push(tempMetadata);
+  //   attributesList = [];
+  // };
 
-  const saveMetaDataSingleFile = (_editionCount) => {
-    let metadata = metadataList.find((meta) => meta.edition == _editionCount);
-    fs.writeFileSync(
-      path.join(
-        props.config.outputPath,
-        "build",
-        "json",
-        `${_editionCount}.json`
-      ),
-      JSON.stringify(metadata, null, 2)
-    );
-  };
+  // const saveMetaDataSingleFile = (_editionCount) => {
+  //   let metadata = metadataList.find((meta) => meta.edition == _editionCount);
+  //   fs.writeFileSync(
+  //     path.join(
+  //       props.config.outputPath,
+  //       "build",
+  //       "json",
+  //       `${_editionCount}.json`
+  //     ),
+  //     JSON.stringify(metadata, null, 2)
+  //   );
+  // };
 
-  const writeMetaData = (_data) => {
-    fs.writeFileSync(
-      path.join(props.config.outputPath, "build", "json", `_metadata.json`),
-      _data
-    );
-  };
+  // const writeMetaData = (_data) => {
+  //   fs.writeFileSync(
+  //     path.join(props.config.outputPath, "build", "json", `_metadata.json`),
+  //     _data
+  //   );
+  // };
+
+  const prepareLayers = (folderNames) => {
+    var _layers = [];
+    folderNames.forEach((layer, index) => {
+      if (layer.enabledElementsCount == 0 || (layer.name.split("-")[1] == "Arm" && folderNames[findBodyIndex(folderNames)].enabledElementsCount == 0)) {
+        return
+      }
+      _layers.push(JSON.parse(JSON.stringify(layer)))
+      var _enabledElements = [];
+      layer.elements.forEach((element) => {
+        if (element.enabled == true) {
+          _enabledElements.push(element)
+        }
+      });
+      _layers[_layers.length - 1].elements = _enabledElements
+    })
+    return _layers;
+  }
+
+  // Hashlips' implementation, left for future development
+  // const prepareLayers = async (folderNames) => {
+  //   var _layers = JSON.parse(JSON.stringify(folderNames));
+  //   var availableLayerIndex = 0;
+  //   _layers.forEach((layer, index) => {
+  //     if (layer.enabledElementsCount == 0) {
+  //       _layers.splice(index, 1)
+  //       return
+  //     }
+  //     var _enabledElements = [];
+  //     layer.elements.forEach((element) => {
+  //       if (element.enabled == true) {
+  //         _enabledElements.push(element)
+  //       }
+  //     });
+  //     _layers[availableLayerIndex].elements = _enabledElements
+  //     availableLayerIndex++;
+  //   })
+  //   return _layers;
+  // }
+
   const startCreating = async () => {
     props.setProgress(0);
     let editionCount = 1;
     let failedCount = 0;
+    let layers = prepareLayers(props.folderNames);
     while (editionCount <= props.config.supply) {
-      let newDna = createDna(props.folderNames);
+      let newDna = createDna(layers);
       if (isDnaUnique(dnaList, newDna)) {
-        let results = constructLayerToDna(newDna, props.folderNames);
+        let results = constructLayerToDna(newDna, layers);
         let loadedElements = [];
 
         results.forEach((layer) => {
@@ -241,8 +319,8 @@ function Aside(props) {
           });
 
           saveImage(editionCount);
-          addMetadata(newDna, editionCount);
-          saveMetaDataSingleFile(editionCount);
+          // addMetadata(newDna, editionCount);
+          // saveMetaDataSingleFile(editionCount);
           console.log(`Created edition: ${editionCount}`);
         });
         dnaList.add(filterDNAOptions(newDna));
@@ -259,44 +337,44 @@ function Aside(props) {
         }
       }
     }
-    writeMetaData(JSON.stringify(metadataList, null, 2));
+    // writeMetaData(JSON.stringify(metadataList, null, 2));
   };
 
   // Metadata ====================
 
-  const updateMetadata = () => {
-    let rawdata = fs.readFileSync(
-      path.join(props.config.outputPath, "build", "json", `_metadata.json`)
-    );
-    let data = JSON.parse(rawdata);
+  // const updateMetadata = () => {
+  //   let rawdata = fs.readFileSync(
+  //     path.join(props.config.outputPath, "build", "json", `_metadata.json`)
+  //   );
+  //   let data = JSON.parse(rawdata);
 
-    data.forEach((item) => {
-      item.name = `${props.config.name} #${item.edition}`;
-      item.description = props.config.description;
-      item.image = `${props.config.baseUri}/${item.edition}.png`;
+  //   data.forEach((item) => {
+  //     item.name = `${props.config.name} #${item.edition}`;
+  //     item.description = props.config.description;
+  //     item.image = `${props.config.baseUri}/${item.edition}.png`;
 
-      fs.writeFileSync(
-        path.join(
-          props.config.outputPath,
-          "build",
-          "json",
-          `${item.edition}.json`
-        ),
-        JSON.stringify(item, null, 2)
-      );
-    });
+  //     fs.writeFileSync(
+  //       path.join(
+  //         props.config.outputPath,
+  //         "build",
+  //         "json",
+  //         `${item.edition}.json`
+  //       ),
+  //       JSON.stringify(item, null, 2)
+  //     );
+  //   });
 
-    fs.writeFileSync(
-      path.join(props.config.outputPath, "build", "json", `_metadata.json`),
-      JSON.stringify(data, null, 2)
-    );
+  //   fs.writeFileSync(
+  //     path.join(props.config.outputPath, "build", "json", `_metadata.json`),
+  //     JSON.stringify(data, null, 2)
+  //   );
 
-    console.log(`Updated baseUri for images to ===> ${props.config.baseUri}`);
-    console.log(
-      `Updated description for images to ===> ${props.config.description}`
-    );
-    console.log(`Updated name prefix for images to ===> ${props.config.name}`);
-  };
+  //   console.log(`Updated baseUri for images to ===> ${props.config.baseUri}`);
+  //   console.log(
+  //     `Updated description for images to ===> ${props.config.description}`
+  //   );
+  //   console.log(`Updated name prefix for images to ===> ${props.config.name}`);
+  // };
 
   const generate = async() => {
     props.setStatus("");
@@ -304,7 +382,6 @@ function Aside(props) {
       props.setStatus("Your need to increase the supply.");
       return;
     }
-    console.log(props.folderNames);
     if (props.folderNames.length == 0) {
       props.setStatus(
         "Make sure to get the folder with only image files in them."
@@ -320,17 +397,17 @@ function Aside(props) {
       props.setStatus("Insufficient varients, consider adding more or reducing supply");
     }
     // To enforce future rules
-    fs.readFile('./rules.txt', 'utf8' , (err, _rules) => {
-      if (err) {
-        console.error(err)
-        return
-      }
-      var rules = [];
-      _rules.split("+").map((rule) => {
-        rules.push(rule.split("\n").filter(function(e){return e}))
-      })
-      props.setRules(rules)
-    })
+    // fs.readFile('./rules.txt', 'utf8' , (err, _rules) => {
+    //   if (err) {
+    //     console.error(err)
+    //     return
+    //   }
+    //   var rules = [];
+    //   _rules.split("+").map((rule) => {
+    //     rules.push(rule.split("\n").filter(function(e){return e}))
+    //   })
+    //   props.setRules(rules)
+    // })
     buildFolders();
     startCreating();
   };
@@ -342,7 +419,7 @@ function Aside(props) {
       </div>
       <ul className="aside_list">
         <details className="aside_list_item">
-          <summary>Configuration</summary>
+          <summary className="feature_header">Configuration</summary>
           <div>
             {input("Supply", "supply", props.config.supply, "number")}
             {/* {input("Name", "name", props.config.name)} */}
@@ -353,7 +430,7 @@ function Aside(props) {
           </div>
         </details>
         <details className="aside_list_item">
-          <summary>Paths</summary>
+          <summary  className="feature_header">Paths</summary>
           {input("Input Path", "inputPath", props.config.inputPath)}
           <button
             className="aside_list_item_button"
@@ -373,7 +450,7 @@ function Aside(props) {
 
 
         <details className="aside_list_item">
-          <summary>Layer order</summary>
+          <summary className="feature_header">Layer order</summary>
           <p className="aside_list_item_input_label">Input folders</p>
           <button className="aside_list_item_button" onClick={props.getFolders}>
             Get Folders
@@ -394,7 +471,7 @@ function Aside(props) {
           })}
         </details>
         <details className="aside_list_item">
-          <summary>Create</summary>
+          <summary className="feature_header">Create</summary>
           <p className="aside_list_item_input_label">Images</p>
           <button
             className="aside_list_item_button"

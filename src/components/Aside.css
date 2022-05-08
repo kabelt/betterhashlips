@@ -37,12 +37,13 @@
   padding: 0;
   list-style-type: none;
   background-color: black;
+  margin-left: 10px;
+  margin-top: 5px;
 }
 
 .aside_list_item {
   padding: 10px 15px;
   font-size: 14px;
-  cursor: pointer;
 }
 
 .aside_list_item_input_label {
@@ -85,6 +86,12 @@
   right: 20px;
   cursor: pointer;
   color: var(--white);
+}
+
+.feature_header {
+  width: fit-content;
+
+  cursor: pointer;
 }
 
 /* responsive layout */
